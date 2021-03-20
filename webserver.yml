@@ -1,0 +1,31 @@
+- hosts: server
+  tasks:
+          - name: installing httpd
+            package:
+                    name: httpd
+                    state: present
+          
+          - name: installing php
+            package:
+                    name: php
+                    state: present
+
+          - name: copying php file
+            template:
+                    src: /root/haproxy-task/home.php
+                    dest: /var/www/html/home.php
+
+          - name: starting httpd service
+            service:
+                    name: httpd
+                    state: started
+
+          - name: stopping selinux
+            selinux:
+                    policy: targeted
+                    state: permissive
+
+          - name: firewall
+            firewalld:
+                    port: 80/tcp
+                    state: enabled

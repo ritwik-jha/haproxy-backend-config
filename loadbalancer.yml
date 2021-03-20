@@ -1,0 +1,26 @@
+- hosts: loadbalancer
+  tasks:
+          - name: installing hapoxy
+            package:
+                    name: haproxy
+                    state: present
+
+          - name: copying configuration file
+            template:
+                    src: /root/haproxy-task/haproxy.cfg
+                    dest: /etc/haproxy/haproxy.cfg
+
+          - name: stopping selinux
+            selinux:
+                    policy: targeted
+                    state: permissive
+
+          - name: starting haproxy service
+            service:
+                    name: haproxy
+                    state: started
+
+          - name: firewall
+            firewalld:
+                    port: 5000/tcp
+                    state: enabled
